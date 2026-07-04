@@ -330,6 +330,31 @@
                                             <segue destination="LO7-Nq-Ret" kind="show" id="FlP-a3-trB"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="dSU-cLi-ent">
+                                        <rect key="frame" x="16" y="558" width="343" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dSU-cLi-ent" id="dSU-cLi-cv1">
+                                            <rect key="frame" x="0.0" y="0.0" width="316.5" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="DSU Client" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dSU-cLi-lbl">
+                                                    <rect key="frame" x="16" y="11" width="292.5" height="21.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="dSU-cLi-lbl" secondAttribute="trailing" id="dSU-cLi-c01"/>
+                                                <constraint firstItem="dSU-cLi-lbl" firstAttribute="top" secondItem="dSU-cLi-cv1" secondAttribute="topMargin" id="dSU-cLi-c02"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="dSU-cLi-lbl" secondAttribute="bottom" id="dSU-cLi-c03"/>
+                                                <constraint firstItem="dSU-cLi-lbl" firstAttribute="leading" secondItem="dSU-cLi-cv1" secondAttribute="leadingMargin" id="dSU-cLi-c04"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="dSU-cLi-scn" kind="show" id="dSU-cLi-sg1"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -599,6 +624,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DjP-Vi-44c" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2326" y="788"/>
+        </scene>
+        <!--DSU Client-->
+        <scene sceneID="dSU-cLi-sc0">
+            <objects>
+                <tableViewController id="dSU-cLi-scn" customClass="ControllersDSUClientViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="dSU-cLi-tv0">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <connections>
+                            <outlet property="dataSource" destination="dSU-cLi-scn" id="dSU-cLi-oc1"/>
+                            <outlet property="delegate" destination="dSU-cLi-scn" id="dSU-cLi-oc2"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="DSU Client" largeTitleDisplayMode="never" id="dSU-cLi-ni0"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dSU-cLi-fr0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2326" y="1200"/>
         </scene>
         <!--Touch IR Pointer-->
         <scene sceneID="S8U-ix-aW3">

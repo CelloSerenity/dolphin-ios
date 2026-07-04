@@ -377,11 +377,16 @@ typedef NS_ENUM(NSInteger, DOLMappingGroupEditSection) {
   if (!_inputDetector) {
     return;
   }
-  
+
+  // Poll-based backends (e.g. DSU client) only send/receive fresh data when their
+  // UpdateInput() is called; on desktop this is driven by the always-running
+  // HotkeyScheduler, which iOS has no equivalent of.
+  g_controller_interface.UpdateInput();
+
   constexpr auto initial_time = std::chrono::seconds(3);
   constexpr auto confirmation_time = std::chrono::milliseconds(0);
   constexpr auto maximum_time = std::chrono::seconds(5);
-  
+
   _inputDetector->Update(initial_time, confirmation_time, maximum_time);
   
   if (!_inputDetector->IsComplete()) {

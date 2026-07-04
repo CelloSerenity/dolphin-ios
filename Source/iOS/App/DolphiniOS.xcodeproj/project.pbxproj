@@ -184,6 +184,7 @@
 		B9DC5FB92884CB7C004BD94A /* GraphicsChoiceCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = B9DC5FB82884CB7C004BD94A /* GraphicsChoiceCell.mm */; };
 		B9EC1A43295FFFD30013EBE4 /* SoftwareListiOSViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B9EC1A42295FFFD30013EBE4 /* SoftwareListiOSViewController.mm */; };
 		B9EC28382D21D429000FAE09 /* ControllersTouchscreenViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B9EC28372D21D429000FAE09 /* ControllersTouchscreenViewController.mm */; };
+		BC81CCFBCC61B26413C260B1 /* ControllersDSUClientViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46F9C1EB2B5D41385B497776 /* ControllersDSUClientViewController.mm */; };
 		B9EC283A2D21DA56000FAE09 /* TCWiiTouchIRMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9EC28392D21DA56000FAE09 /* TCWiiTouchIRMode.swift */; };
 		B9EC283D2D21DE2F000FAE09 /* ControllersTouchscreenIRModeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B9EC283C2D21DE2F000FAE09 /* ControllersTouchscreenIRModeViewController.mm */; };
 		B9EFF8532E7F56790029F016 /* AppIcon_Glass.icon in Resources */ = {isa = PBXBuildFile; fileRef = B9EFF8522E7F56790029F016 /* AppIcon_Glass.icon */; };
@@ -595,6 +596,8 @@
 		B9EC1A42295FFFD30013EBE4 /* SoftwareListiOSViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SoftwareListiOSViewController.mm; sourceTree = "<group>"; };
 		B9EC28362D21D429000FAE09 /* ControllersTouchscreenViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControllersTouchscreenViewController.h; sourceTree = "<group>"; };
 		B9EC28372D21D429000FAE09 /* ControllersTouchscreenViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ControllersTouchscreenViewController.mm; sourceTree = "<group>"; };
+		DCEF75F40C4D2A70BD31C1BE /* ControllersDSUClientViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControllersDSUClientViewController.h; sourceTree = "<group>"; };
+		46F9C1EB2B5D41385B497776 /* ControllersDSUClientViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ControllersDSUClientViewController.mm; sourceTree = "<group>"; };
 		B9EC28392D21DA56000FAE09 /* TCWiiTouchIRMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCWiiTouchIRMode.swift; sourceTree = "<group>"; };
 		B9EC283B2D21DE2F000FAE09 /* ControllersTouchscreenIRModeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControllersTouchscreenIRModeViewController.h; sourceTree = "<group>"; };
 		B9EC283C2D21DE2F000FAE09 /* ControllersTouchscreenIRModeViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ControllersTouchscreenIRModeViewController.mm; sourceTree = "<group>"; };
@@ -830,6 +833,8 @@
 				B904ACE728866E2D008B6BE9 /* ControllersSettings.storyboard */,
 				B9EC28362D21D429000FAE09 /* ControllersTouchscreenViewController.h */,
 				B9EC28372D21D429000FAE09 /* ControllersTouchscreenViewController.mm */,
+				DCEF75F40C4D2A70BD31C1BE /* ControllersDSUClientViewController.h */,
+				46F9C1EB2B5D41385B497776 /* ControllersDSUClientViewController.mm */,
 				B9EC283B2D21DE2F000FAE09 /* ControllersTouchscreenIRModeViewController.h */,
 				B9EC283C2D21DE2F000FAE09 /* ControllersTouchscreenIRModeViewController.mm */,
 			);
@@ -2248,6 +2253,7 @@
 				B9B2C661288E569E00CB6569 /* ExternalDisplayEmulationViewController.mm in Sources */,
 				B950CFA32961696100197719 /* BootNoticeNavigationViewController.m in Sources */,
 				B9EC28382D21D429000FAE09 /* ControllersTouchscreenViewController.mm in Sources */,
+				BC81CCFBCC61B26413C260B1 /* ControllersDSUClientViewController.mm in Sources */,
 				B9B1483C29642CB8002C4BE7 /* UpdateRequiredNoticeViewController.m in Sources */,
 				B900A7B027F2866D000361DD /* UserFolderUtil.swift in Sources */,
 				B974923C2960096C00794509 /* ImportFileManager.m in Sources */,
