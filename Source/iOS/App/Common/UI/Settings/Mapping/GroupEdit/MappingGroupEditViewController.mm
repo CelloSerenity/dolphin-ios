@@ -39,6 +39,8 @@ typedef NS_ENUM(NSInteger, DOLMappingGroupEditSection) {
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+
+  _inputLock = [[NSLock alloc] init];
   
   self.navigationItem.title = DOLCoreLocalizedString(CppToFoundationString(self.controlGroup->ui_name));
 }
@@ -375,49 +377,66 @@ typedef NS_ENUM(NSInteger, DOLMappingGroupEditSection) {
   [self->_inputLock lock];
   
   if (!_inputDetector) {
+    [self->_inputLock unlock];
     return;
   }
-  
+
+  // Poll-based backends (e.g. DSU client) only send/receive fresh data when their
+  // UpdateInput() is called; on desktop this is driven by the always-running
+  // HotkeyScheduler, which iOS has no equivalent of.
+  g_controller_interface.UpdateInput();
+
   constexpr auto initial_time = std::chrono::seconds(3);
   constexpr auto confirmation_time = std::chrono::milliseconds(0);
   constexpr auto maximum_time = std::chrono::seconds(5);
-  
+
   _inputDetector->Update(initial_time, confirmation_time, maximum_time);
   
   if (!_inputDetector->IsComplete()) {
+    [self->_inputLock unlock];
     return;
   }
   
   auto results = _inputDetector->TakeResults();
-  
+  _inputDetector.reset();
+  [self->_inputLock unlock];
+
+  std::string expression;
   if (ciface::MappingCommon::ContainsCompleteDetection(results)) {
-    std::string expression = BuildExpression(results, self.controller->GetDefaultDevice(), ciface::MappingCommon::Quote::On);
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-      NSIndexPath* indexPath = self.tableView.indexPathForSelectedRow;
-      
-      [self->_inputAlertController dismissViewControllerAnimated:true completion:^{
-        if (!expression.empty()) {
-          auto& controlRef = self.controlGroup->controls[indexPath.row]->control_ref;
-          
-          controlRef->SetExpression(expression);
-          self.controller->UpdateSingleControlReference(g_controller_interface, controlRef.get());
-          
-          [self.delegate controlGroupDidChange:self];
-          
-          [self updateControlCell:[self.tableView cellForRowAtIndexPath:indexPath] withExpression:expression];
-        } else {
-          UIAlertController* noInputAlert = [UIAlertController alertControllerWithTitle:@"No input was detected." message:nil preferredStyle:UIAlertControllerStyleAlert];
-          [noInputAlert addAction:[UIAlertAction actionWithTitle:DOLCoreLocalizedString(@"OK") style:UIAlertActionStyleDefault handler:nil]];
-          
-          [self presentViewController:noInputAlert animated:true completion:nil];
-        }
-        
-        [self.tableView deselectRowAtIndexPath:indexPath animated:true];
-      }];
-    });
+    expression = BuildExpression(results, self.controller->GetDefaultDevice(),
+                                 ciface::MappingCommon::Quote::On);
   }
-  
+
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NSIndexPath* indexPath = self.tableView.indexPathForSelectedRow;
+
+    [self->_inputAlertController dismissViewControllerAnimated:true completion:^{
+      if (!expression.empty()) {
+        auto& controlRef = self.controlGroup->controls[indexPath.row]->control_ref;
+
+        controlRef->SetExpression(expression);
+        self.controller->UpdateSingleControlReference(g_controller_interface, controlRef.get());
+
+        [self.delegate controlGroupDidChange:self];
+
+        [self updateControlCell:[self.tableView cellForRowAtIndexPath:indexPath]
+                 withExpression:expression];
+      } else {
+        UIAlertController* noInputAlert =
+            [UIAlertController alertControllerWithTitle:@"No input was detected."
+                                                 message:nil
+                                          preferredStyle:UIAlertControllerStyleAlert];
+        [noInputAlert addAction:
+                          [UIAlertAction actionWithTitle:DOLCoreLocalizedString(@"OK")
+                                                   style:UIAlertActionStyleDefault
+                                                 handler:nil]];
+
+        [self presentViewController:noInputAlert animated:true completion:nil];
+      }
+
+      [self.tableView deselectRowAtIndexPath:indexPath animated:true];
+    }];
+  });
 }
 
 @end
