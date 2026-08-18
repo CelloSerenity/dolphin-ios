@@ -8,6 +8,16 @@ class MainDisplaySceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     MainSceneCoordinator.shared().mainScene = scene as? UIWindowScene
+
+    if let url = connectionOptions.urlContexts.first?.url {
+      _ = GameLaunchLinkManager.shared.handle(url)
+    }
+  }
+
+  func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    for context in URLContexts where GameLaunchLinkManager.shared.handle(context.url) {
+      break
+    }
   }
   
   func sceneDidDisconnect(_ scene: UIScene) {
