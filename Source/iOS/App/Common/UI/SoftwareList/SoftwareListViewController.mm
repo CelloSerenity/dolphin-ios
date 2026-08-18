@@ -27,12 +27,18 @@
   [super viewDidLoad];
   
   self->_gameFiles = [[GameFileCacheManager sharedManager] getGames];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveGameLaunchRequest:) name:GameLaunchLinkManager.launchRequestedNotification object:nil];
+}
+
+- (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:GameLaunchLinkManager.launchRequestedNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   
   [self reloadGameFiles];
+  [self launchPendingGameIfNeeded];
 }
 
 - (void)reloadGameFiles {
@@ -40,8 +46,30 @@
     dispatch_async(dispatch_get_main_queue(), ^{
       self->_gameFiles = [[GameFileCacheManager sharedManager] getGames];
       [self.collectionView reloadData];
+      [self launchPendingGameIfNeeded];
     });
   }];
+}
+
+- (void)receiveGameLaunchRequest:(NSNotification*)notification {
+  [self launchPendingGameIfNeeded];
+}
+
+- (void)launchPendingGameIfNeeded {
+  NSString* pendingGamePath = [GameLaunchLinkManager shared].pendingGamePath;
+  if (pendingGamePath == nil || self.viewIfLoaded.window == nil || self.presentedViewController != nil) {
+    return;
+  }
+
+  NSString* standardizedPendingPath = pendingGamePath.stringByStandardizingPath;
+  for (GameFilePtrWrapper* gameFileWrapper in self->_gameFiles) {
+    NSString* gamePath = CppToFoundationString(gameFileWrapper.gameFile->GetFilePath()).stringByStandardizingPath;
+    if ([gamePath isEqualToString:standardizedPendingPath]) {
+      [[GameLaunchLinkManager shared] clearPendingGamePath:pendingGamePath];
+      [self loadGameFile:gameFileWrapper];
+      return;
+    }
+  }
 }
 
 - (void)loadGameFile:(GameFilePtrWrapper*)gameFileWrapper {

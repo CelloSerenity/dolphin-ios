@@ -22,6 +22,7 @@
 #import "GameFilePtrWrapper.h"
 #import "ImportFileManager.h"
 #import "LocalizationUtil.h"
+#import "Swift.h"
 
 typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
   DOLSoftwareListDocumentPickerTypeImportSoftware,
@@ -242,6 +243,16 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
       
       [self performSegueWithIdentifier:@"properties" sender:nil];
     }]];
+
+    NSString* gamePath = CppToFoundationString(gameFileWrapper.gameFile->GetFilePath());
+    NSURL* launchURL = [[GameLaunchLinkManager shared] launchURLForGamePath:gamePath];
+    UIAction* copyLaunchLinkAction = [UIAction actionWithTitle:DOLCoreLocalizedString(@"Copy Launch Link") image:[UIImage systemImageNamed:@"link"] identifier:nil handler:^(UIAction*) {
+      [UIPasteboard generalPasteboard].string = launchURL.absoluteString;
+    }];
+    if (launchURL == nil) {
+      copyLaunchLinkAction.attributes = UIMenuElementAttributesDisabled;
+    }
+    [actions addObject:copyLaunchLinkAction];
     
     UIAction* deleteAction = [UIAction actionWithTitle:DOLCoreLocalizedString(@"Delete") image:[UIImage systemImageNamed:@"trash"] identifier:nil handler:^(UIAction*) {
       UIAlertController* confirmAlert = [UIAlertController alertControllerWithTitle:DOLCoreLocalizedString(@"Confirm") message:DOLCoreLocalizedString(@"Are you sure you want to delete this file?") preferredStyle:UIAlertControllerStyleAlert];
