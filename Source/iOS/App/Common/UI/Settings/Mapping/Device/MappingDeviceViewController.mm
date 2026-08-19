@@ -139,22 +139,21 @@ struct Device {
     
     _lastSelected = indexPath.row;
     
-    bool isTouchscreen = qualifier.source == "iOS";
-    bool isMFiPhysicalController = qualifier.source == "MFi" && qualifier.name != "Keyboard";
-    
-    if (isTouchscreen || isMFiPhysicalController) {
+    std::string profileName;
+    if (qualifier.source == "iOS") {
+      profileName = "Touchscreen";
+    } else if (qualifier.source == "MFi" && qualifier.name != "Keyboard") {
+      profileName = "Physical Controller";
+    } else if (qualifier.source == "DSUClient") {
+      profileName = "DSU Controller";
+    }
+
+    if (!profileName.empty()) {
       UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@"Load Defaults" message:@"Would you like to load the default profile for this device type?\n\nWARNING: If you choose to proceed, your current configuration will be overwritten." preferredStyle:UIAlertControllerStyleAlert];
       
       [alertController addAction:[UIAlertAction actionWithTitle:@"Load" style:UIAlertActionStyleDestructive handler:^(UIAlertAction*) {
-        std::string iniName;
-        
-        if (isTouchscreen) {
-          iniName = "Touchscreen";
-        } else {
-          iniName = "Physical Controller";
-        }
-        
-        const std::string profilePath = self.inputConfig->GetSysProfileDirectoryPath() + iniName + ".ini";
+        const std::string profilePath =
+            self.inputConfig->GetSysProfileDirectoryPath() + profileName + ".ini";
         
         Common::IniFile iniFile;
         iniFile.Load(profilePath);
@@ -162,6 +161,7 @@ struct Device {
         self.emulatedController->LoadConfig(iniFile.GetOrCreateSection("Profile"));
         self.emulatedController->SetDefaultDevice(device);
         self.emulatedController->UpdateReferences(g_controller_interface);
+        [self.delegate deviceDidChange:self];
       }]];
       
       [alertController addAction:[UIAlertAction actionWithTitle:@"Don't Load" style:UIAlertActionStyleCancel handler:nil]];

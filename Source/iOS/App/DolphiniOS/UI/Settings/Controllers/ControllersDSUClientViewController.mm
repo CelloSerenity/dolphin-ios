@@ -70,6 +70,9 @@ static NSString* const kServerCellId = @"DSUServerCell";
 
   self.title = @"DSU Client";
 
+  self.tableView.sectionFooterHeight = UITableViewAutomaticDimension;
+  self.tableView.estimatedSectionFooterHeight = 60.0;
+
   [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kEnableCellId];
 
   self.navigationItem.rightBarButtonItem =
