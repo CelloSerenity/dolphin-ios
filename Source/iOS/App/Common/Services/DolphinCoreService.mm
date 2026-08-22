@@ -27,6 +27,7 @@
 #import "HostQueue.h"
 #import "LocalizationUtil.h"
 #import "MsgAlertManager.h"
+#import "RetroAchievementsManager.h"
 
 @implementation DolphinCoreService
 
@@ -46,6 +47,7 @@
 #endif
   
   UICommon::Init();
+  [[DOLRetroAchievementsManager shared] start];
   
   [[MsgAlertManager shared] registerHandler];
   
@@ -72,6 +74,8 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication*)application {
+  [[DOLRetroAchievementsManager shared] setBackgroundExecutionAllowed:YES];
+
   DOLHostQueueRunSync(^{
     auto& system = Core::System::GetInstance();
     
@@ -82,6 +86,8 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication*)application {
+  [[DOLRetroAchievementsManager shared] setBackgroundExecutionAllowed:NO];
+
   DOLHostQueueRunSync(^{
     auto& system = Core::System::GetInstance();
     
@@ -106,7 +112,9 @@
     }
     
     Config::Save();
-    
+
+    [[DOLRetroAchievementsManager shared] shutdown];
+
     Core::Shutdown(system);
     
     UICommon::ShutdownControllers();
