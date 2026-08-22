@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A17C0A012F10000100000002 /* RetroAchievementsSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C0A012F10000100000001 /* RetroAchievementsSettingsViewController.swift */; };
 		0ABB5E4CCEEEDBCD2D8D2B75 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C83E3C7032E870DD08E6F64 /* main.m */; };
 		26D300A3AC24D2577DDEF559 /* DDIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB5F8BF832C1EF46796F3C6 /* DDIManager.swift */; };
 		444C3F0FCA4C026057B1457F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05416988C370B963F5653000 /* Security.framework */; };
@@ -264,6 +265,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A17C0A012F10000100000001 /* RetroAchievementsSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetroAchievementsSettingsViewController.swift; sourceTree = "<group>"; };
 		05416988C370B963F5653000 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3770D9ACA7BC46B9D2C089DF /* JitManager+StikJIT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JitManager+StikJIT.swift"; sourceTree = "<group>"; };
 		4F274A73790F056297CA1FEA /* JITEnablerExtension.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JITEnablerExtension.xcconfig; sourceTree = "<group>"; };
@@ -1021,6 +1023,7 @@
 				B9114F982893C69E00B9C57A /* Debug */,
 				B9DC5FA52884945C004BD94A /* Graphics */,
 				B904ACF52886AC2F008B6BE9 /* Mapping */,
+				A17C0A012F10000100000001 /* RetroAchievementsSettingsViewController.swift */,
 				B93986FA287F45A3008E8E47 /* SettingsRootViewController.swift */,
 			);
 			path = Settings;
@@ -2118,6 +2121,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A17C0A012F10000100000002 /* RetroAchievementsSettingsViewController.swift in Sources */,
 				B950CFAA29616B4F00197719 /* MainSceneCoordinator.m in Sources */,
 				B904AD092887DAF1008B6BE9 /* ControllersTypeViewController.mm in Sources */,
 				B9913785288146D700588446 /* WiiAspectRatioViewController.mm in Sources */,

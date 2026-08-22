@@ -17,6 +17,12 @@ class SettingsRootViewController : UITableViewController {
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
+
+    if (indexPath.section == 2 && indexPath.row == 0) {
+      let controller = RetroAchievementsSettingsViewController(style: .insetGrouped)
+      navigationController?.pushViewController(controller, animated: true)
+      return
+    }
     
     if (indexPath.section == 0 && indexPath.row == 3) {
       UIApplication.shared.open(URL(string: "https://oatmealdome.me/dolphinios/")!)
