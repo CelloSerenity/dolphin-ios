@@ -229,6 +229,28 @@
                             </tableViewSection>
                             <tableViewSection id="XA0-MI-tEo">
                                 <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="RA0-MI-iOS">
+                                        <rect key="frame" x="20" y="393" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RA0-MI-iOS" id="RA1-MI-iOS">
+                                            <rect key="frame" x="0.0" y="0.0" width="345.5" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RetroAchievements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RA2-MI-iOS">
+                                                    <rect key="frame" x="20" y="11" width="337.5" height="21.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="RA2-MI-iOS" secondAttribute="bottom" id="RA3-MI-iOS"/>
+                                                <constraint firstItem="RA2-MI-iOS" firstAttribute="top" secondItem="RA1-MI-iOS" secondAttribute="topMargin" id="RA4-MI-iOS"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="RA2-MI-iOS" secondAttribute="trailing" constant="-20" id="RA5-MI-iOS"/>
+                                                <constraint firstAttribute="leadingMargin" secondItem="RA2-MI-iOS" secondAttribute="leading" id="RA6-MI-iOS"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="k4L-nE-i6z">
                                         <rect key="frame" x="20" y="393" width="374" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>

@@ -2,6 +2,8 @@ add_library(dolphin SHARED
   Host.mm
   HostQueue.h
   HostQueue.mm
+  RetroAchievementsManager.h
+  RetroAchievementsManager.mm
 )
 
 set_target_properties(dolphin PROPERTIES

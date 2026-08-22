@@ -417,8 +417,13 @@ std::recursive_mutex& AchievementManager::GetLock()
 
 void AchievementManager::SetHardcoreMode()
 {
-  rc_client_set_hardcore_enabled(m_client, Config::Get(Config::RA_HARDCORE_ENABLED));
-  if (Config::Get(Config::RA_HARDCORE_ENABLED))
+#ifdef IPHONEOS
+  const bool hardcore_enabled = false;
+#else
+  const bool hardcore_enabled = Config::Get(Config::RA_HARDCORE_ENABLED);
+#endif
+  rc_client_set_hardcore_enabled(m_client, hardcore_enabled);
+  if (hardcore_enabled)
   {
     if (Config::Get(Config::MAIN_EMULATION_SPEED) < 1.0f)
       Config::SetBaseOrCurrent(Config::MAIN_EMULATION_SPEED, 1.0f);
