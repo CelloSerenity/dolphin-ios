@@ -1,7 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.1.2 effective-5.10 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
-// swift-module-flags: -target arm64-apple-ios17.4 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name StikJIT
-// swift-module-flags-ignorable: -no-verify-emitted-module-interface -interface-compiler-version 6.1.2
+// swift-compiler-version: Apple Swift version 6.4 effective-5.10 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)
+// swift-module-flags: -target arm64-apple-ios17.4 -enable-objc-interop -enable-library-evolution -language-mode 5 -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name StikJIT
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.4
 import Foundation
 import JavaScriptCore
 import Network
@@ -13,7 +13,9 @@ public struct DDIPaths : Swift.Sendable {
   public var imagePath: Swift.String
   public var trustcachePath: Swift.String
   public var manifestPath: Swift.String
-  public init(imagePath: Swift.String, trustcachePath: Swift.String, manifestPath: Swift.String)
+  public var cryptexInfoPath: Swift.String
+  public var rootHashPath: Swift.String
+  public init(imagePath: Swift.String, trustcachePath: Swift.String, manifestPath: Swift.String, cryptexInfoPath: Swift.String? = nil, rootHashPath: Swift.String? = nil)
   public static func `default`(in directory: Foundation.URL) -> DDIPaths
 }
 @available(iOS 17.4, *)
@@ -25,7 +27,6 @@ public actor DeveloperDiskImageService {
   public func downloadIfNeeded(to paths: DDIPaths, progress: @escaping (Swift.Double, Swift.String) -> Swift.Void = { _, _ in }) async throws
   public func download(to paths: DDIPaths, progress: @escaping (Swift.Double, Swift.String) -> Swift.Void = { _, _ in }) async throws
   @objc deinit
-  @available(iOS 17.4, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
   @_semantics("defaultActor") nonisolated final public var unownedExecutor: _Concurrency.UnownedSerialExecutor {
     get
   }
@@ -35,6 +36,7 @@ public enum StikJIT {
     case universal
     case legacy
     case custom(Foundation.URL)
+    case customBase64(Swift.String)
   }
   public struct DeviceSecurityState : Swift.Sendable {
     public let isTXMPresent: Swift.Bool?
