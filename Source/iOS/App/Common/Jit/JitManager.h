@@ -11,7 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) NSString* acquisitionError;
 
 @property (readonly, assign) bool deviceHasTxm;
-@property (assign) bool requiresUniversalJITProtocol;
 
 + (JitManager*)shared;
 

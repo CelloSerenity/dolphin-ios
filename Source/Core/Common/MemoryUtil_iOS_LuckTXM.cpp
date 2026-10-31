@@ -22,20 +22,6 @@ constexpr size_t EXECUTABLE_REGION_SIZE = 536870912;
 static u8* g_rx_region = nullptr;
 static ptrdiff_t g_rw_region_diff = 0;
 
-__attribute__((noinline, optnone, naked)) static void JIT26Detach()
-{
-  __asm__("mov x16, #0\n"
-          "brk #0xf00d\n"
-          "ret\n");
-}
-
-__attribute__((noinline, optnone, naked)) static void* JIT26PrepareRegion(void*, size_t)
-{
-  __asm__("mov x16, #1\n"
-          "brk #0xf00d\n"
-          "ret\n");
-}
-
 namespace Common
 {
 void AllocateExecutableMemoryRegion_LuckTXM()
@@ -46,23 +32,17 @@ void AllocateExecutableMemoryRegion_LuckTXM()
   }
 
   const size_t size = EXECUTABLE_REGION_SIZE;
-  u8* rx_ptr = static_cast<u8*>(
-      mmap(nullptr, size, PROT_READ | PROT_EXEC, MAP_ANON | MAP_PRIVATE, -1, 0));
+  u8* rx_ptr = static_cast<u8*>(mmap(nullptr, size, PROT_READ | PROT_EXEC, MAP_ANON | MAP_PRIVATE, -1, 0));
 
-  if (rx_ptr == MAP_FAILED)
+  if (!rx_ptr)
   {
     PanicAlertFmt("AllocateExecutableMemoryRegion failed! mmap returned {}", LastStrerrorString());
     return;
   }
 
-  if (JIT26PrepareRegion(rx_ptr, size) != rx_ptr)
-  {
-    JIT26Detach();
-    munmap(rx_ptr, size);
-    PanicAlertFmt("AllocateExecutableMemoryRegion failed! JIT region preparation returned an "
-                  "unexpected address");
-    return;
-  }
+  asm ("mov x0, %0\n"
+       "mov x1, %1\n"
+       "brk #0x69" :: "r" (rx_ptr), "r" (size) : "x0", "x1");
 
   vm_address_t rw_region = 0;
   vm_address_t target = reinterpret_cast<vm_address_t>(rx_ptr);
@@ -74,8 +54,6 @@ void AllocateExecutableMemoryRegion_LuckTXM()
                &cur_protection, &max_protection, VM_INHERIT_DEFAULT);
   if (retval != KERN_SUCCESS)
   {
-    JIT26Detach();
-    munmap(rx_ptr, size);
     PanicAlertFmt("AllocateExecutableMemoryRegion failed! vm_map returned {0:#x}", retval);
     return;
   }
@@ -84,9 +62,6 @@ void AllocateExecutableMemoryRegion_LuckTXM()
 
   if (mprotect(rw_ptr, size, PROT_READ | PROT_WRITE) != 0)
   {
-    vm_deallocate(mach_task_self(), rw_region, size);
-    JIT26Detach();
-    munmap(rx_ptr, size);
     PanicAlertFmt("AllocateExecutableMemoryRegion failed! mprotect returned {}", LastStrerrorString());
     return;
   }
@@ -100,16 +75,12 @@ void AllocateExecutableMemoryRegion_LuckTXM()
   size_t lwret = lwmem_assignmem(regions);
   if (lwret == 0)
   {
-    vm_deallocate(mach_task_self(), rw_region, size);
-    JIT26Detach();
-    munmap(rx_ptr, size);
     PanicAlertFmt("AllocateExecutableMemoryRegion failed!\nlwmem_assignmem failed");
     return;
   }
 
   g_rx_region = rx_ptr;
   g_rw_region_diff = rw_ptr - rx_ptr;
-  JIT26Detach();
 }
 
 ptrdiff_t AllocateWritableRegionAndGetDiff_LuckTXM()
