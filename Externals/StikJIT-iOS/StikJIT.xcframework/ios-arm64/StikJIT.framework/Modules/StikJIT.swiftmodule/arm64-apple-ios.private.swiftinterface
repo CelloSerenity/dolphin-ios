@@ -18,7 +18,7 @@ public struct DDIPaths : Swift.Sendable {
   public init(imagePath: Swift.String, trustcachePath: Swift.String, manifestPath: Swift.String, cryptexInfoPath: Swift.String? = nil, rootHashPath: Swift.String? = nil)
   public static func `default`(in directory: Foundation.URL) -> DDIPaths
 }
-@available(iOS 17.4, *)
+@available(iOS 17.4, tvOS 17.4, *)
 public actor DeveloperDiskImageService {
   public static var shared: DeveloperDiskImageService {
     get
@@ -61,8 +61,9 @@ public enum StikJIT {
   public struct Configuration : Swift.Sendable {
     public var deviceAddress: Swift.String
     public var rsdPort: Swift.UInt16
+    public var automaticallyDiscoverRSDPort: Swift.Bool
     public var connectionTimeout: Foundation.TimeInterval
-    public init(deviceAddress: Swift.String = "10.7.0.1", rsdPort: Swift.UInt16 = 49152, connectionTimeout: Foundation.TimeInterval = 5)
+    public init(deviceAddress: Swift.String = "10.7.0.1", rsdPort: Swift.UInt16 = 49152, automaticallyDiscoverRSDPort: Swift.Bool? = nil, connectionTimeout: Foundation.TimeInterval = 5)
     public static var `default`: Configuration {
       get
     }
@@ -76,7 +77,7 @@ public enum StikJIT {
   public static func prepareDevice(pairingFile: Foundation.URL, paths: DDIPaths, configuration: Configuration = .default, progress: @escaping (PreparationStage) -> Swift.Void = { _ in }) -> JITReadiness
   public static func resetCachedDDI(at paths: DDIPaths) throws
   public static func isDDIMounted(pairingFile: Foundation.URL, configuration: Configuration = .default) throws -> Swift.Bool
-  @available(iOS 17.4, *)
+  @available(iOS 17.4, tvOS 17.4, *)
   public static func downloadDDIIfNeeded(to paths: DDIPaths, progress: @escaping (Swift.Double, Swift.String) -> Swift.Void = { _, _ in }) async throws
   public static func mountDDI(pairingFile: Foundation.URL, configuration: Configuration = .default, paths: DDIPaths, progress: @escaping (Swift.Double) -> Swift.Void = { _ in }) throws
 }

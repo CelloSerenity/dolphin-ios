@@ -851,8 +851,10 @@
         "mangledName": "$s7StikJIT25DeveloperDiskImageServiceC",
         "moduleName": "StikJIT",
         "intro_iOS": "17.4",
+        "intro_tvOS": "17.4",
         "declAttributes": [
           "AccessControl",
+          "Available",
           "Available"
         ],
         "conformances": [
@@ -957,6 +959,20 @@
         "declAttributes": [
           "ImplementationOnly"
         ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "StikJIT"
+      },
+      {
+        "kind": "Import",
+        "name": "Network",
+        "printedName": "Network",
+        "declKind": "Import",
+        "moduleName": "StikJIT"
       },
       {
         "kind": "Import",
@@ -2088,6 +2104,91 @@
               },
               {
                 "kind": "Var",
+                "name": "automaticallyDiscoverRSDPort",
+                "printedName": "automaticallyDiscoverRSDPort",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Var",
+                "usr": "s:7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvp",
+                "mangledName": "$s7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvp",
+                "moduleName": "StikJIT",
+                "declAttributes": [
+                  "HasStorage",
+                  "AccessControl"
+                ],
+                "hasStorage": true,
+                "accessors": [
+                  {
+                    "kind": "Accessor",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvg",
+                    "mangledName": "$s7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvg",
+                    "moduleName": "StikJIT",
+                    "implicit": true,
+                    "accessorKind": "get"
+                  },
+                  {
+                    "kind": "Accessor",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvs",
+                    "mangledName": "$s7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvs",
+                    "moduleName": "StikJIT",
+                    "implicit": true,
+                    "accessorKind": "set"
+                  },
+                  {
+                    "kind": "Accessor",
+                    "name": "Modify",
+                    "printedName": "Modify()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvM",
+                    "mangledName": "$s7StikJITAAO13ConfigurationV28automaticallyDiscoverRSDPortSbvM",
+                    "moduleName": "StikJIT",
+                    "implicit": true,
+                    "accessorKind": "_modify"
+                  }
+                ]
+              },
+              {
+                "kind": "Var",
                 "name": "connectionTimeout",
                 "printedName": "connectionTimeout",
                 "children": [
@@ -2174,7 +2275,7 @@
               {
                 "kind": "Constructor",
                 "name": "init",
-                "printedName": "init(deviceAddress:rsdPort:connectionTimeout:)",
+                "printedName": "init(deviceAddress:rsdPort:automaticallyDiscoverRSDPort:connectionTimeout:)",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -2198,6 +2299,21 @@
                   },
                   {
                     "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Bool?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "hasDefaultArg": true,
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
                     "name": "Double",
                     "printedName": "Swift.Double",
                     "hasDefaultArg": true,
@@ -2205,8 +2321,8 @@
                   }
                 ],
                 "declKind": "Constructor",
-                "usr": "s:7StikJITAAO13ConfigurationV13deviceAddress7rsdPort17connectionTimeoutADSS_s6UInt16VSdtcfc",
-                "mangledName": "$s7StikJITAAO13ConfigurationV13deviceAddress7rsdPort17connectionTimeoutADSS_s6UInt16VSdtcfc",
+                "usr": "s:7StikJITAAO13ConfigurationV13deviceAddress7rsdPort28automaticallyDiscoverRSDPort17connectionTimeoutADSS_s6UInt16VSbSgSdtcfc",
+                "mangledName": "$s7StikJITAAO13ConfigurationV13deviceAddress7rsdPort28automaticallyDiscoverRSDPort17connectionTimeoutADSS_s6UInt16VSbSgSdtcfc",
                 "moduleName": "StikJIT",
                 "declAttributes": [
                   "AccessControl"
@@ -2706,8 +2822,10 @@
             "moduleName": "StikJIT",
             "static": true,
             "intro_iOS": "17.4",
+            "intro_tvOS": "17.4",
             "declAttributes": [
               "AccessControl",
+              "Available",
               "Available"
             ],
             "throwing": true,
@@ -3462,6 +3580,34 @@
       "value": "false"
     },
     {
+      "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/RemotePairingPortResolver.swift",
+      "kind": "StringLiteral",
+      "offset": 119,
+      "length": 43,
+      "value": "\"com.stik.StikJIT.remote-pairing-discovery\""
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/RemotePairingPortResolver.swift",
+      "kind": "IntegerLiteral",
+      "offset": 218,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/RemotePairingPortResolver.swift",
+      "kind": "BooleanLiteral",
+      "offset": 379,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/RemotePairingPortResolver.swift",
+      "kind": "BooleanLiteral",
+      "offset": 450,
+      "length": 5,
+      "value": "false"
+    },
+    {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/ScriptRunner.swift",
       "kind": "IntegerLiteral",
       "offset": 150,
@@ -3485,35 +3631,35 @@
     {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/StikJIT.swift",
       "kind": "StringLiteral",
-      "offset": 1452,
+      "offset": 1507,
       "length": 10,
       "value": "\"10.7.0.1\""
     },
     {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/StikJIT.swift",
       "kind": "IntegerLiteral",
-      "offset": 1502,
+      "offset": 1557,
       "length": 5,
       "value": "49152"
     },
     {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/StikJIT.swift",
       "kind": "IntegerLiteral",
-      "offset": 1563,
+      "offset": 1681,
       "length": 1,
       "value": "5"
     },
     {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/StikJIT.swift",
       "kind": "BooleanLiteral",
-      "offset": 2198,
+      "offset": 2787,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/StikJIT\/StikJIT\/Sources\/StikJIT.swift",
       "kind": "BooleanLiteral",
-      "offset": 3067,
+      "offset": 3667,
       "length": 5,
       "value": "false"
     }

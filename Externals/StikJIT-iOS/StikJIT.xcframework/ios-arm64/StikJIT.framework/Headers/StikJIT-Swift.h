@@ -202,7 +202,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #   define SWIFT_ENUM_NAMED(_type, _name, SWIFT_NAME, _extensibility) SWIFT_ENUM(_type, _name, _extensibility)
 #  endif
 # else
-#  define SWIFT_ENUM(_type, _name, _extensibility) _type _name; enum
+#  define SWIFT_ENUM(_type, _name, _extensibility) _type _name; enum 
 #  define SWIFT_ENUM_NAMED(_type, _name, SWIFT_NAME, _extensibility) SWIFT_ENUM(_type, _name, _extensibility)
 # endif
 #endif
