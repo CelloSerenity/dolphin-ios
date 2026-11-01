@@ -11,7 +11,7 @@ concurrency:
 jobs:
   build:
     if: github.repository_owner != 'OatmealDome'
-    runs-on: macos-15
+    runs-on: xcode-27
     strategy:
       fail-fast: false
       matrix:
@@ -57,9 +57,6 @@ jobs:
             xcode-cache-deriveddata-${{ runner.os }}-
           deriveddata-directory: ${{ github.workspace }}/build-Xcode
           sourcepackages-directory: ${{ github.workspace }}/build-Xcode/SourcePackages
-
-      - name: Set Xcode Version
-        run: sudo xcode-select -s /Applications/Xcode_26.0.app
 
       - name: Install Homebrew Dependencies
         run: brew install cmake ninja bartycrouch
