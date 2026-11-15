@@ -132,16 +132,16 @@
   switch ([StikJITManager shared].jitLaunchMode) {
   case JITLaunchModeExternalStikDebug:
     selectedTitle = @"External StikDebug";
-    self.jitLaunchModeInfoLabel.text = @"Launches StikDebug through its URL scheme when launching a game. When using LiveContainer, enable “Use LiveContainer's Bundle ID” in LiveContainer settings first.";
+    self.jitLaunchModeInfoLabel.text = @"Opens StikDebug to enable JIT when you launch a game.";
     break;
   case JITLaunchModeBuiltInStikJIT:
     selectedTitle = @"Built-in StikJIT";
-    self.jitLaunchModeInfoLabel.text = @"Before launching a game, connect to a nearby Wi-Fi network and LocalDevVPN. If Wi-Fi is unavailable, enable Cellular Data, connect to LocalDevVPN, then enable Airplane Mode before launching the game. When using LiveContainer, enable “Helper Process Support” in LiveContainer’s app settings first. A valid pairing file is required to use Built-in StikJIT. If one is not imported, Dolphin will revert to “Wait for Debugger” when you leave this screen.";
+    self.jitLaunchModeInfoLabel.text = @"Before launching a game, connect to LocalDevVPN, then connect to Wi-Fi or enable Airplane Mode. Import a pairing file to use Built-in StikJIT; otherwise, DolphiniOS uses Wait for Debugger.";
     break;
   case JITLaunchModeWaitForDebugger:
   default:
     selectedTitle = @"Wait for Debugger";
-    self.jitLaunchModeInfoLabel.text = @"When launching a game, waits for a debugger or another JIT provider to attach. Dolphin will not launch anything automatically.";
+    self.jitLaunchModeInfoLabel.text = @"Waits for you to enable JIT before starting the game.";
     break;
   }
 
@@ -241,33 +241,63 @@
   [StikJITManager shared].jitLaunchMode = mode;
   [self refreshJITLaunchMode];
 
+  if ([self configureLiveContainerForJITLaunchMode:mode]) {
+    return;
+  }
+
   if (mode == JITLaunchModeBuiltInStikJIT) {
     [self refreshPreparationStatus];
-    if (![self enableLiveContainerHelperIfNeeded]) {
-      [self detectTXM];
-    }
+    [self detectTXM];
   }
 }
 
-- (BOOL)enableLiveContainerHelperIfNeeded {
-  if (std::getenv("LC_HOME_PATH") == nullptr) {
+- (BOOL)configureLiveContainerForJITLaunchMode:(JITLaunchMode)mode {
+  if (mode == JITLaunchModeWaitForDebugger || std::getenv("LC_HOME_PATH") == nullptr) {
     return NO;
   }
 
-  NSURL* settingsURL = [NSBundle.mainBundle.bundleURL URLByAppendingPathComponent:@"LCAppInfo.plist"];
-  NSMutableDictionary* settings = [[NSDictionary dictionaryWithContentsOfURL:settingsURL error:nullptr] mutableCopy];
-  if ([settings[@"helperProcessesSupport"] boolValue]) {
+  BOOL useBundleID = mode == JITLaunchModeExternalStikDebug;
+  NSString* key = useBundleID ? @"doUseLCBundleId" : @"helperProcessesSupport";
+  NSString* setting = useBundleID ? @"Use LiveContainer’s Bundle ID" : @"Helper Process Support";
+  NSURL* bundleURL = NSBundle.mainBundle.bundleURL;
+  NSURL* settingsURL = [bundleURL URLByAppendingPathComponent:@"LCAppInfo.plist"];
+  NSDictionary* currentSettings = [NSDictionary dictionaryWithContentsOfURL:settingsURL error:nullptr];
+  if ([currentSettings[key] boolValue]) {
     return NO;
   }
 
-  settings[@"helperProcessesSupport"] = @YES;
-  BOOL saved = [settings writeToURL:settingsURL error:nullptr];
-  NSString* title = saved ? @"Restart DolphiniOS" : @"Helper Process Support Required";
+  NSMutableDictionary* settings = [currentSettings mutableCopy];
+  settings[key] = @YES;
+  BOOL saved = NO;
+  if (useBundleID) {
+    NSURL* infoURL = [bundleURL URLByAppendingPathComponent:@"Info.plist"];
+    NSMutableDictionary* info = [[NSDictionary dictionaryWithContentsOfURL:infoURL error:nullptr] mutableCopy];
+    NSString* originalID = info[@"CFBundleIdentifier"];
+    NSString* hostID = [[JitManager shared] signedApplicationBundleIdentifier];
+    if (originalID.length > 0 && hostID.length > 0) {
+      settings[@"LCOrignalBundleIdentifier"] = originalID;
+      info[@"CFBundleIdentifier"] = hostID;
+      if ([settings writeToURL:settingsURL error:nullptr]) {
+        saved = [info writeToURL:infoURL error:nullptr];
+        if (!saved) {
+          [currentSettings writeToURL:settingsURL error:nullptr];
+        }
+      }
+    }
+  } else {
+    saved = [settings writeToURL:settingsURL error:nullptr];
+  }
+
+  NSString* title = saved ? @"LiveContainer Setting Changed" : @"LiveContainer Setting Required";
   NSString* message = saved
-      ? @"Helper Process Support is enabled. Close and reopen DolphiniOS in LiveContainer to use Built-in StikJIT."
-      : @"Could not update LiveContainer settings. Enable Helper Process Support in LiveContainer’s settings for DolphiniOS, then reopen the app.";
+      ? [NSString stringWithFormat:@"“%@” is enabled. Reopen DolphiniOS in LiveContainer after it closes.", setting]
+      : [NSString stringWithFormat:@"Could not enable “%@”. Turn it on in LiveContainer’s settings for DolphiniOS, then reopen the app.", setting];
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-  [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+  [alert addAction:[UIAlertAction actionWithTitle:saved ? @"Close App" : @"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (saved) {
+      std::exit(EXIT_SUCCESS);
+    }
+  }]];
   [self presentViewController:alert animated:true completion:nil];
   return YES;
 }
@@ -277,13 +307,8 @@
 }
 
 - (void)refreshPreparationStatus {
-  NSString* preparationStatus = [DDIManager shared].preparationStatus;
-  self.preparationStatusLabel.text = preparationStatus;
-  if (![StikJITManager shared].hasPairingFile) {
-    self.importPairingFileStatusLabel.text = @"Missing";
-  } else {
-    self.importPairingFileStatusLabel.text = [preparationStatus isEqualToString:@"Ready"] ? @"Validated" : @"Imported";
-  }
+  self.preparationStatusLabel.text = [DDIManager shared].preparationStatus;
+  self.importPairingFileStatusLabel.text = [StikJITManager shared].pairingFileStatus;
   self.txmStatusLabel.text = [DDIManager shared].txmStatus;
 }
 

@@ -1,6 +1,7 @@
 // Copyright 2025 DolphiniOS Project
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+import CryptoKit
 import Foundation
 
 @objc enum JITLaunchMode: Int {
@@ -12,6 +13,7 @@ import Foundation
 private let kSelfEnableJitDefaultsKey = "stikjit_self_enable_jit"
 private let kJITLaunchModeDefaultsKey = "jit_launch_mode"
 private let kForceJITScriptDefaultsKey = "stikjit_force_jit_script"
+private let kValidatedPairingFileDigestKey = "stikjit_validated_pairing_file_digest"
 private let kPairingFileName = "pairingFile.plist"
 private let kStikJITFolderName = "StikJIT"
 
@@ -51,6 +53,27 @@ private let kStikJITFolderName = "StikJIT"
     FileManager.default.fileExists(atPath: pairingFileURL.path)
   }
 
+  @objc var pairingFileStatus: String {
+    guard hasPairingFile else {
+      UserDefaults.standard.removeObject(forKey: kValidatedPairingFileDigestKey)
+      return "Missing"
+    }
+
+    guard let digest = UserDefaults.standard.data(forKey: kValidatedPairingFileDigestKey),
+          let pairingData = try? Data(contentsOf: pairingFileURL),
+          Data(SHA256.hash(data: pairingData)) == digest else {
+      return "Imported"
+    }
+    return "Validated"
+  }
+
+  func markPairingFileValidated(_ pairingData: Data) {
+    guard let currentData = try? Data(contentsOf: pairingFileURL), currentData == pairingData else {
+      return
+    }
+    UserDefaults.standard.set(Data(SHA256.hash(data: pairingData)), forKey: kValidatedPairingFileDigestKey)
+  }
+
   func currentPairingFileURL() -> URL? {
     hasPairingFile ? pairingFileURL : nil
   }
@@ -60,6 +83,7 @@ private let kStikJITFolderName = "StikJIT"
       try FileManager.default.removeItem(at: pairingFileURL)
     }
 
+    UserDefaults.standard.removeObject(forKey: kValidatedPairingFileDigestKey)
     try FileManager.default.copyItem(at: sourceURL, to: pairingFileURL)
   }
 }
