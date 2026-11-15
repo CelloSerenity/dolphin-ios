@@ -5,6 +5,8 @@
 
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
+#include <cstdlib>
+
 #import "Core/Config/MainSettings.h"
 
 #import "Swift.h"
@@ -54,7 +56,6 @@
   }
 
   [self refreshJITLaunchMode];
-  self.importPairingFileStatusLabel.text = [StikJITManager shared].pairingFileDisplayName;
 
   [self refreshPreparationStatus];
 
@@ -242,8 +243,33 @@
 
   if (mode == JITLaunchModeBuiltInStikJIT) {
     [self refreshPreparationStatus];
-    [self detectTXM];
+    if (![self enableLiveContainerHelperIfNeeded]) {
+      [self detectTXM];
+    }
   }
+}
+
+- (BOOL)enableLiveContainerHelperIfNeeded {
+  if (std::getenv("LC_HOME_PATH") == nullptr) {
+    return NO;
+  }
+
+  NSURL* settingsURL = [NSBundle.mainBundle.bundleURL URLByAppendingPathComponent:@"LCAppInfo.plist"];
+  NSMutableDictionary* settings = [[NSDictionary dictionaryWithContentsOfURL:settingsURL error:nullptr] mutableCopy];
+  if ([settings[@"helperProcessesSupport"] boolValue]) {
+    return NO;
+  }
+
+  settings[@"helperProcessesSupport"] = @YES;
+  BOOL saved = [settings writeToURL:settingsURL error:nullptr];
+  NSString* title = saved ? @"Restart DolphiniOS" : @"Helper Process Support Required";
+  NSString* message = saved
+      ? @"Helper Process Support is enabled. Close and reopen DolphiniOS in LiveContainer to use Built-in StikJIT."
+      : @"Could not update LiveContainer settings. Enable Helper Process Support in LiveContainer’s settings for DolphiniOS, then reopen the app.";
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+  [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+  [self presentViewController:alert animated:true completion:nil];
+  return YES;
 }
 
 - (void)forceJitScriptChanged {
@@ -251,7 +277,13 @@
 }
 
 - (void)refreshPreparationStatus {
-  self.preparationStatusLabel.text = [DDIManager shared].preparationStatus;
+  NSString* preparationStatus = [DDIManager shared].preparationStatus;
+  self.preparationStatusLabel.text = preparationStatus;
+  if (![StikJITManager shared].hasPairingFile) {
+    self.importPairingFileStatusLabel.text = @"Missing";
+  } else {
+    self.importPairingFileStatusLabel.text = [preparationStatus isEqualToString:@"Ready"] ? @"Validated" : @"Imported";
+  }
   self.txmStatusLabel.text = [DDIManager shared].txmStatus;
 }
 
@@ -412,6 +444,9 @@
     [url stopAccessingSecurityScopedResource];
   }
 
+  [[DDIManager shared] invalidateReadiness];
+  [self refreshPreparationStatus];
+
   if (error != nil) {
     UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat:@"Failed to import pairing file: %@", [error localizedDescription]] preferredStyle:UIAlertControllerStyleAlert];
 
@@ -421,10 +456,6 @@
 
     return;
   }
-
-  self.importPairingFileStatusLabel.text = [StikJITManager shared].pairingFileDisplayName;
-  [[DDIManager shared] invalidateReadiness];
-  [self refreshPreparationStatus];
 }
 
 @end

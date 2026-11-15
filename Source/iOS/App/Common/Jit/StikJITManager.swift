@@ -12,7 +12,6 @@ import Foundation
 private let kSelfEnableJitDefaultsKey = "stikjit_self_enable_jit"
 private let kJITLaunchModeDefaultsKey = "jit_launch_mode"
 private let kForceJITScriptDefaultsKey = "stikjit_force_jit_script"
-private let kPairingFileDisplayNameDefaultsKey = "stikjit_pairing_file_display_name"
 private let kPairingFileName = "pairingFile.plist"
 private let kStikJITFolderName = "StikJIT"
 
@@ -52,12 +51,6 @@ private let kStikJITFolderName = "StikJIT"
     FileManager.default.fileExists(atPath: pairingFileURL.path)
   }
 
-  @objc var pairingFileDisplayName: String {
-    guard hasPairingFile else { return "Not Imported" }
-    return UserDefaults.standard.string(forKey: kPairingFileDisplayNameDefaultsKey)
-      ?? pairingFileURL.lastPathComponent
-  }
-
   func currentPairingFileURL() -> URL? {
     hasPairingFile ? pairingFileURL : nil
   }
@@ -68,6 +61,5 @@ private let kStikJITFolderName = "StikJIT"
     }
 
     try FileManager.default.copyItem(at: sourceURL, to: pairingFileURL)
-    UserDefaults.standard.set(sourceURL.lastPathComponent, forKey: kPairingFileDisplayNameDefaultsKey)
   }
 }
